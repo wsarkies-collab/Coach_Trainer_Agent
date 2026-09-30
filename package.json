@@ -1,0 +1,16 @@
+{
+  "name": "trainer-agent",
+  "version": "2.0.0",
+  "description": "AI personal trainer for your gym app: Vercel functions + Supabase + embeddable chat widget",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node dev.js",
+    "test": "node test/agent.test.js"
+  },
+  "engines": { "node": ">=20.12" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest",
+    "@supabase/supabase-js": "^2"
+  }
+}

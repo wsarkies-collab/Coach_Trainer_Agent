@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trainer Agent Demo</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 60px auto; padding: 0 16px; color: #222; background: #fafafa; }
+    code { background: #eee; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Your Gym App (demo page)</h1>
+  <p>This stands in for your app. Click the button in the bottom-right corner to chat with the trainer.</p>
+  <p>You're signed in as the demo user "Sam", whose profile and workouts come from <code>demo/app-data.json</code>.</p>
+  <p>Try: <code>How's my bench going?</code>, then reload the page and ask <code>What did I ask you about earlier?</code></p>
+
+  <!-- The widget. In your real app, data-user-token comes from your backend. -->
+  <script src="/widget.js" data-coach-name="Coach" data-color="#e4572e" defer></script>
+  <script>
+    // Local testing only (no Supabase configured): sign in as the demo user.
+    // In your app: TrainerAgent.setTokenProvider(async () => (await supabase.auth.getSession()).data.session?.access_token)
+    window.addEventListener("load", () => window.TrainerAgent.setUser("demo-user"));
+  </script>
+</body>
+</html>

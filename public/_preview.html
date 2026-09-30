@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="font-family:sans-serif;background:#fafafa;margin:40px">
+<h1>Your Gym App</h1>
+<script>window.fetch=async(u,o)=>{await new Promise(r=>setTimeout(r,String(u).includes('history')?600:100));return {ok:true,json:async()=>(String(u).includes('history')?{messages:[]}:{reply:"Here's a demo:\n[How to do a Romanian deadlift](https://www.youtube.com/watch?v=aaaaaaaaaaa)\n- Push your hips **back**"})}};</script>
+<script src="widget.js" data-coach-name="Coach"></script>
+<script>setTimeout(()=>{TrainerAgent.setUser('demo');TrainerAgent.open();const r=document.querySelector('body > div:last-of-type').shadowRoot;r.querySelector('textarea').value="Can you show me how to do an RDL?";r.querySelector('form').requestSubmit();},200);</script>
+</body></html>

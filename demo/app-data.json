@@ -1,0 +1,51 @@
+{
+  "demo-user": {
+    "profile": {
+      "name": "Sam",
+      "experienceLevel": "beginner",
+      "goals": ["build muscle", "first bodyweight pull-up"],
+      "trainingDaysPerWeek": 3,
+      "equipment": ["full gym"],
+      "injuries": ["occasional lower back tightness"],
+      "bodyweightKg": 78,
+      "currentProgram": "Beginner Full Body (week 5 of 8)"
+    },
+    "workouts": [
+      { "date": "2026-09-24", "title": "Full Body A", "exercises": [
+        { "name": "Barbell back squat", "sets": [{ "reps": 8, "weightKg": 60 }, { "reps": 8, "weightKg": 60 }, { "reps": 6, "weightKg": 60 }] },
+        { "name": "Bench press", "sets": [{ "reps": 8, "weightKg": 55 }, { "reps": 7, "weightKg": 55 }, { "reps": 6, "weightKg": 55 }] },
+        { "name": "Assisted pull-up", "sets": [{ "reps": 8, "weightKg": -25 }, { "reps": 7, "weightKg": -25 }] }
+      ], "notes": "Bench felt heavy" },
+      { "date": "2026-09-22", "title": "Full Body B", "exercises": [
+        { "name": "Romanian deadlift", "sets": [{ "reps": 10, "weightKg": 60 }, { "reps": 10, "weightKg": 60 }] },
+        { "name": "Overhead press", "sets": [{ "reps": 8, "weightKg": 30 }, { "reps": 8, "weightKg": 30 }, { "reps": 7, "weightKg": 30 }] },
+        { "name": "Seated cable row", "sets": [{ "reps": 12, "weightKg": 50 }, { "reps": 12, "weightKg": 50 }] }
+      ]},
+      { "date": "2026-09-19", "title": "Full Body A", "exercises": [
+        { "name": "Barbell back squat", "sets": [{ "reps": 8, "weightKg": 57.5 }, { "reps": 8, "weightKg": 57.5 }, { "reps": 8, "weightKg": 57.5 }] },
+        { "name": "Bench press", "sets": [{ "reps": 8, "weightKg": 55 }, { "reps": 7, "weightKg": 55 }, { "reps": 6, "weightKg": 55 }] },
+        { "name": "Assisted pull-up", "sets": [{ "reps": 8, "weightKg": -30 }, { "reps": 8, "weightKg": -30 }] }
+      ]},
+      { "date": "2026-09-15", "title": "Full Body B", "exercises": [
+        { "name": "Romanian deadlift", "sets": [{ "reps": 10, "weightKg": 55 }, { "reps": 10, "weightKg": 55 }] },
+        { "name": "Overhead press", "sets": [{ "reps": 8, "weightKg": 30 }, { "reps": 7, "weightKg": 30 }, { "reps": 6, "weightKg": 30 }] },
+        { "name": "Seated cable row", "sets": [{ "reps": 12, "weightKg": 45 }, { "reps": 12, "weightKg": 45 }] }
+      ], "notes": "Lower back a bit tight after RDLs" },
+      { "date": "2026-09-12", "title": "Full Body A", "exercises": [
+        { "name": "Barbell back squat", "sets": [{ "reps": 8, "weightKg": 55 }, { "reps": 8, "weightKg": 55 }, { "reps": 8, "weightKg": 55 }] },
+        { "name": "Bench press", "sets": [{ "reps": 8, "weightKg": 55 }, { "reps": 8, "weightKg": 55 }, { "reps": 6, "weightKg": 55 }] },
+        { "name": "Assisted pull-up", "sets": [{ "reps": 8, "weightKg": -30 }, { "reps": 7, "weightKg": -30 }] }
+      ]},
+      { "date": "2026-09-08", "title": "Full Body B", "exercises": [
+        { "name": "Romanian deadlift", "sets": [{ "reps": 10, "weightKg": 50 }, { "reps": 10, "weightKg": 50 }] },
+        { "name": "Overhead press", "sets": [{ "reps": 8, "weightKg": 27.5 }, { "reps": 8, "weightKg": 27.5 }, { "reps": 8, "weightKg": 27.5 }] },
+        { "name": "Seated cable row", "sets": [{ "reps": 12, "weightKg": 45 }, { "reps": 10, "weightKg": 45 }] }
+      ]},
+      { "date": "2026-09-05", "title": "Full Body A", "exercises": [
+        { "name": "Barbell back squat", "sets": [{ "reps": 8, "weightKg": 52.5 }, { "reps": 8, "weightKg": 52.5 }, { "reps": 8, "weightKg": 52.5 }] },
+        { "name": "Bench press", "sets": [{ "reps": 8, "weightKg": 52.5 }, { "reps": 8, "weightKg": 52.5 }, { "reps": 8, "weightKg": 52.5 }] },
+        { "name": "Assisted pull-up", "sets": [{ "reps": 8, "weightKg": -35 }, { "reps": 8, "weightKg": -35 }] }
+      ]}
+    ]
+  }
+}
