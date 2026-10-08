@@ -25,7 +25,16 @@
     name: (script && script.dataset.coachName) || "Coach",
     color: (script && script.dataset.color) || "#e4572e",
     greeting: (script && script.dataset.greeting) || "Hey! I'm your personal trainer. Ask me anything about technique, training, nutrition or recovery.",
+    // Set to mount the chat inline, filling a container element in the
+    // host page's own layout, instead of the default floating
+    // fab+bubble overlay: no fab button, panel is always open and
+    // sized by its container rather than fixed to the viewport. Meant
+    // for a host page that wants a dedicated "just the coach" screen
+    // (e.g. its own nav tab) rather than a widget hovering over
+    // everything else.
+    embedTarget: script && script.dataset.embedTarget,
   };
+  var isEmbed = !!cfg.embedTarget;
   var history = []; // shown messages; the server keeps the real memory
   var tokenProvider = null;
   var sends = 0; // bumps on every send, so a slow history load can't wipe a new message
@@ -35,15 +44,34 @@
   }
 
   var host = document.createElement("div");
-  host.style.cssText = "position:fixed;z-index:2147483000;top:0;left:0;";
+  // Floating mode: a zero-size fixed-position anchor at the viewport's
+  // origin, with the fab/panel inside positioned via their own
+  // position:fixed rules. Embed mode: a normal block element that
+  // fills whatever space its container (data-embed-target) gives it,
+  // with the panel filling the host in turn -- no viewport-relative
+  // positioning at all, so it behaves like any other piece of the host
+  // page's layout.
+  host.style.cssText = isEmbed
+    ? "position:relative;width:100%;height:100%;display:flex;flex-direction:column;"
+    : "position:fixed;z-index:2147483000;top:0;left:0;";
   var root = host.attachShadow({ mode: "open" });
+  var fabHtml = isEmbed ? "" :
+    '<button class="fab" aria-label="Open personal trainer chat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.57 14.86 22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg></button>';
+  // No close button in embed mode -- there's no floating state to
+  // dismiss back to; the host page's own navigation is how you leave.
+  var closeBtnHtml = isEmbed ? "" : '<button class="close" aria-label="Close">&times;</button>';
   root.innerHTML =
     '<style>' +
-    ':host{all:initial}*{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}' +
-    '.fab{position:fixed;left:20px;top:20px;width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;background:' + cfg.color + ';color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}' +
-    '.fab svg{width:28px;height:28px}' +
-    '.panel{position:fixed;left:20px;top:92px;bottom:20px;width:380px;max-width:calc(100vw - 32px);max-height:560px;background:#fff;color:#1a1a1a;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden}' +
-    '.panel.open{display:flex}' +
+    ':host{all:initial;' + (isEmbed ? 'display:block;width:100%;height:100%;' : '') + '}*{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}' +
+    (isEmbed ? '' :
+      '.fab{position:fixed;left:20px;top:20px;width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;background:' + cfg.color + ';color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}' +
+      '.fab svg{width:28px;height:28px}'
+    ) +
+    (isEmbed
+      ? '.panel{position:static;width:100%;height:100%;max-width:none;max-height:none;background:#fff;color:#1a1a1a;border-radius:0;box-shadow:none;display:flex;flex-direction:column;overflow:hidden}'
+      : '.panel{position:fixed;left:20px;top:92px;bottom:20px;width:380px;max-width:calc(100vw - 32px);max-height:560px;background:#fff;color:#1a1a1a;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden}' +
+        '.panel.open{display:flex}'
+    ) +
     '.head{background:' + cfg.color + ';color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:600}' +
     '.head button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;line-height:1}' +
     '.log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:#f6f6f7}' +
@@ -64,11 +92,11 @@
     'textarea:focus{border-color:' + cfg.color + '}' +
     '.send{border:0;border-radius:10px;padding:0 14px;background:' + cfg.color + ';color:#fff;font-weight:600;cursor:pointer}' +
     '.send:disabled{opacity:.5;cursor:default}' +
-    '@media (max-width:540px){.panel{left:0;right:0;top:0;bottom:0;width:100vw;max-width:100vw;max-height:none;border-radius:0}}' +
+    (isEmbed ? '' : '@media (max-width:540px){.panel{left:0;right:0;top:0;bottom:0;width:100vw;max-width:100vw;max-height:none;border-radius:0}}') +
     '</style>' +
-    '<button class="fab" aria-label="Open personal trainer chat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.57 14.86 22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg></button>' +
-    '<div class="panel" role="dialog" aria-label="Personal trainer chat">' +
-    '<div class="head"><span></span><button class="close" aria-label="Close">&times;</button></div>' +
+    fabHtml +
+    '<div class="panel' + (isEmbed ? ' open' : '') + '" role="dialog" aria-label="Personal trainer chat">' +
+    '<div class="head"><span></span>' + closeBtnHtml + '</div>' +
     '<div class="log" aria-live="polite"></div>' +
     '<form><textarea placeholder="Ask your trainer..." rows="1"></textarea><button class="send" type="submit">Send</button></form>' +
     '</div>';
@@ -169,8 +197,10 @@
     }
   }
 
-  $(".fab").addEventListener("click", function () { panel.classList.toggle("open"); if (panel.classList.contains("open")) input.focus(); });
-  $(".close").addEventListener("click", function () { panel.classList.remove("open"); });
+  // Neither exists in embed mode (see fabHtml/closeBtnHtml above) --
+  // the panel is always open there, with nothing to toggle or dismiss.
+  if ($(".fab")) $(".fab").addEventListener("click", function () { panel.classList.toggle("open"); if (panel.classList.contains("open")) input.focus(); });
+  if ($(".close")) $(".close").addEventListener("click", function () { panel.classList.remove("open"); });
   $("form").addEventListener("submit", function (e) {
     e.preventDefault();
     var text = input.value.trim();
@@ -185,7 +215,10 @@
   render();
   loadHistory();
   (document.body ? Promise.resolve() : new Promise(function (r) { document.addEventListener("DOMContentLoaded", r); }))
-    .then(function () { document.body.appendChild(host); });
+    .then(function () {
+      var container = isEmbed && document.getElementById(cfg.embedTarget);
+      (container || document.body).appendChild(host);
+    });
 
   window.TrainerAgent = {
     open: function () { panel.classList.add("open"); },
