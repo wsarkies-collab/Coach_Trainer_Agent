@@ -7,6 +7,20 @@
  *         data-greeting="Hey! Got a training question?"
  *         defer></script>
  *
+ * Floats as a fab+bubble over the whole page by default. To mount it
+ * as a normal full-size element instead — e.g. for a dedicated "Coach"
+ * screen/tab in your own nav, rather than a bubble hovering over
+ * everything — add data-embed-target pointing at a container element's
+ * id already in your page. No fab, no close button; the chat fills
+ * that container and is always open:
+ *
+ * <div id="coachContainer" style="height:100%"></div>
+ * <script src="https://YOUR-COACH.vercel.app/widget.js"
+ *         data-coach-name="Coach"
+ *         data-color="#e4572e"
+ *         data-embed-target="coachContainer"
+ *         defer></script>
+ *
  * Then, once your app has a Supabase client (the coach uses the user's existing login):
  *
  *   window.TrainerAgent.setTokenProvider(async () =>
